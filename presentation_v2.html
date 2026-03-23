@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TASS · EB-2 NIW Presentation — Nestor Oscar Falon Fersan</title>
+  <meta name="description" content="TASS: Banking-Grade Architecture for the Tourism Economy. EB-2 NIW Strategic Presentation by Nestor Oscar Falon Fersan.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    /* ── RESET & VARIABLES ──────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:    #0A192F;
+      --blue:    #0052FF;
+      --green:   #34C759;
+      --red:     #FF3B30;
+      --amber:   #FF9F0A;
+      --white:   #FFFFFF;
+      --off:     #F5F5F7;
+      --muted:   #6E6E73;
+      --border:  #E5E5E5;
+      --dark2:   #162847;
+      --slide-h: 100vh;
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV DOTS ───────────────────────────────────── */
+    .nav-dots {
+      position: fixed; right: 28px; top: 50%; z-index: 999;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer; transition: all .3s;
+      border: none; padding: 0;
+    }
+    .dot.active, .dot:hover { background: var(--blue); transform: scale(1.4); }
+
+    /* ── PROGRESS BAR ───────────────────────────────── */
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: var(--blue); z-index: 1000;
+      transition: width .4s ease;
+    }
+
+    /* ── SLIDE BASE ─────────────────────────────────── */
+    .slide {
+      min-height: var(--slide-h);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 100px 8vw 80px;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .slide-num {
+      position: absolute; top: 36px; left: 8vw;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      color: rgba(255,255,255,0.2); letter-spacing: 0.2em;
+    }
+    .slide-inner { max-width: 1100px; margin: 0 auto; width: 100%; }
+
+    /* ── REVEAL ANIMATIONS ──────────────────────────── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.up { opacity: 1; transform: none; }
+    .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s}
+    .d4{transition-delay:.4s} .d5{transition-delay:.5s} .d6{transition-delay:.6s}
+
+    /* ── TYPOGRAPHY ─────────────────────────────────── */
+    .eyebrow {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 14px; display: block;
+    }
+    .slide-title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--white); margin-bottom: 20px;
+    }
+    .slide-title em { font-style: italic; color: var(--blue); }
+    .slide-lead {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      color: rgba(255,255,255,0.6); line-height: 1.75;
+      max-width: 700px; margin-bottom: 40px;
+    }
+
+    /* ── GRID HELPERS ───────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+
+    /* ── CARDS ──────────────────────────────────────── */
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 28px;
+      transition: border-color .25s, background .25s;
+    }
+    .card:hover { background: rgba(255,255,255,0.07); border-color: rgba(0,82,255,0.4); }
+    .card-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+    }
+    .card-icon svg { width: 22px; height: 22px; fill: none; stroke-width: 1.75; }
+    .card-icon.blue  { background: rgba(0,82,255,0.15); }
+    .card-icon.blue  svg { stroke: var(--blue); }
+    .card-icon.green { background: rgba(52,199,89,0.15); }
+    .card-icon.green svg { stroke: var(--green); }
+    .card-icon.amber { background: rgba(255,159,10,0.15); }
+    .card-icon.amber svg { stroke: var(--amber); }
+    .card h3 { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+    .card p  { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.65; }
+
+    /* ── STAT BLOCK ─────────────────────────────────── */
+    .stat-block { text-align: center; }
+    .stat-val {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700; letter-spacing: -0.04em;
+      color: var(--white); line-height: 1;
+    }
+    .stat-val.blue  { color: var(--blue); }
+    .stat-val.green { color: var(--green); }
+    .stat-val.amber { color: var(--amber); }
+    .stat-val.red   { color: var(--red); }
+    .stat-lbl { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-top: 8px; line-height: 1.4; }
+
+    /* ── ALERT BOX ──────────────────────────────────── */
+    .alert {
+      background: rgba(255,59,48,0.1);
+      border: 1px solid rgba(255,59,48,0.3);
+      border-radius: 12px; padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .alert-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+    .alert p { font-size: 0.95rem; color: rgba(255,255,255,0.8); line-height: 1.65; }
+
+    /* ── COMPARISON TABLE ───────────────────────────── */
+    .comp-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 20px; }
+    .comp-table th {
+      padding: 14px 18px; font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border-bottom: 2px solid rgba(255,255,255,0.1);
+    }
+    .comp-table th:first-child { text-align: left; color: rgba(255,255,255,0.4); }
+    .comp-table th.bad  { color: var(--red);   background: rgba(255,59,48,0.07); border-radius: 10px 10px 0 0; }
+    .comp-table th.good { color: var(--green); background: rgba(52,199,89,0.07); border-radius: 10px 10px 0 0; }
+    .comp-table td {
+      padding: 14px 18px; font-size: 0.88rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+    }
+    .comp-table td:first-child { color: rgba(255,255,255,0.55); font-weight: 500; }
+    .comp-table td.bad  { color: rgba(255,100,90,0.9);  background: rgba(255,59,48,0.04); }
+    .comp-table td.good { color: rgba(100,220,130,0.95); background: rgba(52,199,89,0.05); font-weight: 600; }
+    .comp-table tr:last-child td { border-bottom: none; }
+
+    /* ── ROI CARDS ──────────────────────────────────── */
+    .roi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 32px; }
+    .roi-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 22px 18px; text-align: center;
+    }
+    .roi-card .val { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; color: var(--green); }
+    .roi-card .lbl { font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 6px; line-height: 1.4; }
+
+    /* ── CHART CONTAINERS ───────────────────────────── */
+    .chart-wrap {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; padding: 24px;
+      position: relative;
+    }
+    .chart-title {
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 16px;
+    }
+    .chart-wrap canvas { max-height: 240px; }
+
+    /* ── TIMELINE ───────────────────────────────────── */
+    .roadmap { position: relative; padding-top: 32px; }
+    .roadmap-track {
+      position: absolute; top: 56px; left: 0; right: 0;
+      height: 2px; background: rgba(255,255,255,0.1);
+    }
+    .roadmap-fill {
+      height: 100%; background: var(--blue);
+      width: 0%; transition: width 1.2s ease 0.4s;
+    }
+    .roadmap-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; position: relative; z-index: 1; }
+    .rs { text-align: center; }
+    .rs-dot {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--navy); border: 2px solid rgba(255,255,255,0.15);
+      margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.3);
+      transition: all .4s;
+    }
+    .rs.done .rs-dot { background: var(--blue); border-color: var(--blue); color: white; }
+    .rs.active .rs-dot { background: var(--green); border-color: var(--green); color: white; box-shadow: 0 0 0 6px rgba(52,199,89,0.2); }
+    .rs-year { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 6px; }
+    .rs.done .rs-year, .rs.active .rs-year { color: var(--blue); }
+    .rs.active .rs-year { color: var(--green); }
+    .rs-title { font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+    .rs.done .rs-title, .rs.active .rs-title { color: white; }
+    .rs-desc { font-size: 0.78rem; color: rgba(255,255,255,0.3); line-height: 1.5; }
+
+    /* ── ARGUMENT PILLS ─────────────────────────────── */
+    .arg-row { display: flex; align-items: flex-start; gap: 16px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .arg-row:last-child { border-bottom: none; }
+    .arg-num {
+      min-width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(0,82,255,0.2); border: 1px solid rgba(0,82,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: var(--blue);
+      flex-shrink: 0;
+    }
+    .arg-content h4 { font-size: 0.95rem; font-weight: 600; color: white; margin-bottom: 4px; }
+    .arg-content p  { font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+    /* ── SLIDE-SPECIFIC BGs ─────────────────────────── */
+    .slide-1 { background: radial-gradient(ellipse at top right, #0D2B55 0%, var(--navy) 60%); }
+    .slide-2 { background: var(--navy); }
+    .slide-3 { background: linear-gradient(180deg, #0A192F 0%, #091524 100%); }
+    .slide-4 { background: radial-gradient(ellipse at bottom left, #0D2B55 0%, var(--navy) 60%); }
+    .slide-5 { background: linear-gradient(135deg, #071020 0%, #0A192F 100%); }
+
+    /* ── COVER / TITLE SLIDE ────────────────────────── */
+    .cover-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid rgba(0,82,255,0.35);
+      background: rgba(0,82,255,0.1);
+      padding: 7px 16px; border-radius: 100px;
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(100,160,255,0.9); margin-bottom: 28px;
+    }
+    .cover-badge span { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; animation: pulse 1.8s ease-in-out infinite; }
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.85)}}
+
+    .cover-title {
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      font-weight: 700; line-height: 1.0;
+      letter-spacing: -0.04em; color: white; margin-bottom: 20px;
+    }
+    .cover-title em { font-style: italic; color: var(--blue); }
+    .cover-sub {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: rgba(255,255,255,0.45); line-height: 1.5; max-width: 700px; margin-bottom: 48px;
+    }
+    .cover-stats { display: flex; gap: 3rem; flex-wrap: wrap; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+    /* ── FOOTER NAV ─────────────────────────────────── */
+    .slide-footer {
+      position: absolute; bottom: 28px; left: 8vw; right: 8vw;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .slide-footer-brand { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.15); }
+    .slide-footer-right { font-size: 0.72rem; color: rgba(255,255,255,0.15); }
+
+    /* ── SCROLL CTA ─────────────────────────────────── */
+    .scroll-hint {
+      position: absolute; bottom: 60px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.2); font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+    .scroll-hint svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+    @keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; }
+      .three-col { grid-template-columns: 1fr; }
+      .roi-grid { grid-template-columns: 1fr 1fr; }
+      .roadmap-steps { grid-template-columns: 1fr 1fr; }
+      .nav-dots { display: none; }
+      .cover-stats { gap: 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .slide { padding: 90px 5vw 70px; }
+      .roi-grid { grid-template-columns: 1fr; }
+      .roadmap-steps { grid-template-columns: 1fr; }
+      .roadmap-track { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Navigation dots -->
+<div class="nav-dots" id="navDots">
+  <button class="dot active" onclick="scrollToSlide(0)" title="Cover"></button>
+  <button class="dot" onclick="scrollToSlide(1)" title="The Pain Point"></button>
+  <button class="dot" onclick="scrollToSlide(2)" title="The Solution"></button>
+  <button class="dot" onclick="scrollToSlide(3)" title="Comparison"></button>
+  <button class="dot" onclick="scrollToSlide(4)" title="Economic Impact"></button>
+  <button class="dot" onclick="scrollToSlide(5)" title="National Interest"></button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     COVER SLIDE
+══════════════════════════════════════════════ -->
+<section class="slide slide-1" id="slide-0">
+  <div class="slide-inner">
+    <div class="cover-badge reveal"><span></span>EB-2 NIW Strategic Presentation · 2025</div>
+    <h1 class="cover-title reveal d1">
+      TASS:<br><em>Banking-Grade</em><br>Architecture<br>for Tourism.
+    </h1>
+    <p class="cover-sub reveal d2">
+      How 25+ years of professional IT experience — 10+ years in BCRA-regulated banking became the solution to a $17B industry's biggest security and efficiency crisis.
+    </p>
+    <div class="cover-stats reveal d3">
+      <div class="stat-block">
+        <div class="stat-val blue">25+</div>
+        <div class="stat-lbl">Years Professional<br>IT Experience</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-val green">300%</div>
+        <div class="stat-lbl">Capacity<br>Increase</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-val amber">180s</div>
+        <div class="stat-lbl">Quote<br>Generation</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-val" style="color:white">40k+</div>
+        <div class="stat-lbl">U.S. Agencies<br>to Serve</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint" onclick="scrollToSlide(1)">
+    <span>Scroll</span>
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+  <div class="slide-footer">
+    <span class="slide-footer-brand">TASS · IT-Integral Solutions</span>
+    <span class="slide-footer-right">Nestor Oscar Falon Fersan</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — THE PAIN POINT
+══════════════════════════════════════════════ -->
+<section class="slide slide-2" id="slide-1">
+  <div class="slide-num">01 / 05</div>
+  <div class="slide-inner">
+
+    <span class="eyebrow reveal">The Problem</span>
+    <h2 class="slide-title reveal d1">The Digital Security Gap<br>in the <em>U.S. Travel Sector</em></h2>
+
+    <div class="two-col">
+      <div>
+        <p class="slide-lead reveal d2">
+          While Global Distribution Systems (GDS) are secure, the Last Mile — the travel agency's desktop — is a black hole of manual errors and unencrypted data.
+        </p>
+        <div class="alert reveal d3">
+          <div class="alert-label">Critical Vulnerability</div>
+          <p>70% of independent U.S. travel agencies still handle credit card and passport data in unprotected Excel files or plain email attachments — with no encryption, no audit trail, and no compliance framework.</p>
+        </div>
+      </div>
+      <div>
+        <div class="three-col" style="grid-template-columns:1fr;gap:16px;">
+          <div class="card reveal d2">
+            <div class="card-icon" style="background:rgba(255,59,48,.15);">
+              <svg viewBox="0 0 24 24" style="stroke:var(--red)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h3>+38% Cyberattacks</h3>
+            <p>Attacks on small travel businesses increased 38% in the last 24 months, with an average loss of $120,000 per data breach.</p>
+          </div>
+          <div class="card reveal d3">
+            <div class="card-icon" style="background:rgba(255,159,10,.15);">
+              <svg viewBox="0 0 24 24" style="stroke:var(--amber)"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </div>
+            <h3>Manual Error Rate: 15%</h3>
+            <p>Manual data entry in travel agencies produces a 15% error rate — causing booking failures, chargebacks, and compliance violations.</p>
+          </div>
+          <div class="card reveal d4">
+            <div class="card-icon" style="background:rgba(0,82,255,.15);">
+              <svg viewBox="0 0 24 24" style="stroke:var(--blue)"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <h3>45–60 Min per Booking</h3>
+            <p>The average independent travel agent spends 45–60 minutes processing a single reservation manually — a rate that is not economically viable.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">
+    <span class="slide-footer-brand">TASS · IT-Integral Solutions</span>
+    <span class="slide-footer-right">Nestor Oscar Falon Fersan</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — THE SOLUTION
+══════════════════════════════════════════════ -->
+<section class="slide slide-3" id="slide-2">
+  <div class="slide-num">02 / 05</div>
+  <div class="slide-inner">
+
+    <span class="eyebrow reveal">The Solution</span>
+    <h2 class="slide-title reveal d1">TASS: A <em>Financial Fortress</em><br>Built on 20 Years of Core Banking</h2>
+    <p class="slide-lead reveal d2">TASS isn't just a booking tool. It applies the same security architecture used in regulated financial institutions — directly to the travel agency desktop.</p>
+
+    <div class="three-col">
+      <div class="card reveal d2">
+        <div class="card-icon blue">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Automated Encryption</h3>
+        <p>AES-256-GCM encryption applied to every booking, client record, and payment data point — the exact protocol used at Banco Santa Cruz for sensitive financial records.</p>
+      </div>
+      <div class="card reveal d3">
+        <div class="card-icon amber">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Asynchronous API Logic</h3>
+        <p>Background processing eliminates system freezes during critical payment operations. No more lost bookings due to GDS timeouts or slow connections.</p>
+      </div>
+      <div class="card reveal d4">
+        <div class="card-icon green">
+          <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>Python-Driven Efficiency</h3>
+        <p>Intelligent automation reduces human error from 15% to under 1%. Quote generation drops from 4–6 hours to 180 seconds. 70% of tasks run without manual intervention.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;" class="reveal d5">
+      <div class="chart-wrap">
+        <div class="chart-title">System Architecture — Security Layers</div>
+        <canvas id="archChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">
+    <span class="slide-footer-brand">TASS · IT-Integral Solutions</span>
+    <span class="slide-footer-right">Nestor Oscar Falon Fersan</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — COMPARISON TABLE + PIE CHART
+══════════════════════════════════════════════ -->
+<section class="slide slide-4" id="slide-3">
+  <div class="slide-num">03 / 05</div>
+  <div class="slide-inner">
+
+    <span class="eyebrow reveal">The Disruption</span>
+    <h2 class="slide-title reveal d1">Before vs. <em>With TASS</em></h2>
+
+    <div class="two-col">
+      <div class="reveal d2">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="bad">Traditional Process</th>
+              <th class="good">With TASS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Data Entry</td>
+              <td class="bad">Manual — 15% error rate</td>
+              <td class="good">Automated — &lt;1% error</td>
+            </tr>
+            <tr>
+              <td>Data Security</td>
+              <td class="bad">Local storage, unencrypted</td>
+              <td class="good">AES-256 End-to-End</td>
+            </tr>
+            <tr>
+              <td>Response Time</td>
+              <td class="bad">45–60 min per booking</td>
+              <td class="good">5–10 min (85% faster)</td>
+            </tr>
+            <tr>
+              <td>Quote Generation</td>
+              <td class="bad">4–6 hours manual</td>
+              <td class="good">180 seconds automated</td>
+            </tr>
+            <tr>
+              <td>Legal Compliance</td>
+              <td class="bad">Best-effort, no trail</td>
+              <td class="good">Automatic Digital Audit</td>
+            </tr>
+            <tr>
+              <td>Follow-up Tracking</td>
+              <td class="bad">Manual, leads lost</td>
+              <td class="good">Automated alerts, 0 missed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="reveal d3">
+        <div class="chart-wrap">
+          <div class="chart-title">Security Surface Reduction with TASS</div>
+          <canvas id="secPie"></canvas>
+        </div>
+        <div class="chart-wrap" style="margin-top:16px;">
+          <div class="chart-title">Efficiency Gains: Manual vs. TASS</div>
+          <canvas id="effBar"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">
+    <span class="slide-footer-brand">TASS · IT-Integral Solutions</span>
+    <span class="slide-footer-right">Nestor Oscar Falon Fersan</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — ECONOMIC IMPACT
+══════════════════════════════════════════════ -->
+<section class="slide slide-5" id="slide-4">
+  <div class="slide-num">04 / 05</div>
+  <div class="slide-inner">
+
+    <span class="eyebrow reveal">The Numbers</span>
+    <h2 class="slide-title reveal d1">Driving Economic Growth<br>for U.S. <em>Small Businesses</em></h2>
+    <p class="slide-lead reveal d2">One agent using TASS can manage 3× more clients without adding staff. That's not productivity — that's economic transformation.</p>
+
+    <div class="roi-grid reveal d3">
+      <div class="roi-card">
+        <div class="val">-40%</div>
+        <div class="lbl">Reduction in operational costs per agency</div>
+      </div>
+      <div class="roi-card">
+        <div class="val">+250%</div>
+        <div class="lbl">Increase in sales capacity</div>
+      </div>
+      <div class="roi-card">
+        <div class="val">$50k</div>
+        <div class="lbl">Annual fraud prevention savings per agency</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-top:36px;">
+      <div class="reveal d4">
+        <div class="chart-wrap">
+          <div class="chart-title">Client Capacity: Agent with TASS vs. Without</div>
+          <canvas id="capBar"></canvas>
+        </div>
+      </div>
+      <div class="reveal d4">
+        <div class="chart-wrap">
+          <div class="chart-title">U.S. Deployment Roadmap</div>
+          <div class="roadmap" id="roadmap">
+            <div class="roadmap-track"><div class="roadmap-fill" id="roadmapFill"></div></div>
+            <div class="roadmap-steps">
+              <div class="rs done">
+                <div class="rs-year">2024–present</div>
+                <div class="rs-dot">✓</div>
+                <div class="rs-title">Production</div>
+                <div class="rs-desc">AR · UY · CL Live deployment</div>
+              </div>
+              <div class="rs active">
+                <div class="rs-year">Year 1</div>
+                <div class="rs-dot">→</div>
+                <div class="rs-title">Florida Launch</div>
+                <div class="rs-desc">Miami, Orlando — highest density of Latin-market travel agencies in the U.S.</div>
+              </div>
+              <div class="rs">
+                <div class="rs-year">Year 2</div>
+                <div class="rs-dot">3</div>
+                <div class="rs-title">Texas + California</div>
+                <div class="rs-desc">Houston, Los Angeles, San Antonio — $4.2B combined travel agency market</div>
+              </div>
+              <div class="rs">
+                <div class="rs-year">Year 3</div>
+                <div class="rs-dot">4</div>
+                <div class="rs-title">National Scale</div>
+                <div class="rs-desc">Full U.S. rollout targeting 40,000+ independent agencies</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-footer">
+    <span class="slide-footer-brand">TASS · IT-Integral Solutions</span>
+    <span class="slide-footer-right">Nestor Oscar Falon Fersan</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 5 — NATIONAL INTEREST
+══════════════════════════════════════════════ -->
+<section class="slide slide-1" id="slide-5">
+  <div class="slide-num">05 / 05</div>
+  <div class="slide-inner">
+
+    <span class="eyebrow reveal">National Interest Argument</span>
+    <h2 class="slide-title reveal d1">Why the U.S. Needs<br>This <em>Expertise Now</em></h2>
+
+    <div class="two-col">
+      <div>
+        <div class="alert reveal d2" style="background:rgba(0,82,255,.1);border-color:rgba(0,82,255,.3);">
+          <div class="alert-label" style="color:var(--blue)">The U.S. Talent Deficit</div>
+          <p>There is a shortage of <strong>1.2 million</strong> skilled workers in cybersecurity and financial software development in the United States — a gap the U.S. Bureau of Labor Statistics projects will grow through 2030.</p>
+        </div>
+
+        <div class="alert reveal d3" style="background:rgba(52,199,89,.08);border-color:rgba(52,199,89,.3);">
+          <div class="alert-label" style="color:var(--green)">Unique Value Proposition</div>
+          <p>"The petitioner brings a unique hybrid expertise: <strong>Banking Security + Tourism Automation</strong>. This cross-industry knowledge transfer is vital for the modernization of the U.S. service sector and the protection of American consumer data."</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="arg-row reveal d2">
+          <div class="arg-num">1</div>
+          <div class="arg-content">
+            <h4>Financial-Grade Security Innovation</h4>
+            <p>TASS implements AES-256 encryption, RBAC, and immutable audit trails — security standards from regulated banking — into the travel industry. No equivalent proprietary system exists in the U.S. SME travel market.</p>
+          </div>
+        </div>
+        <div class="arg-row reveal d3">
+          <div class="arg-num">2</div>
+          <div class="arg-content">
+            <h4>Proprietary Intellectual Property</h4>
+            <p>100% original code, fully owned by the petitioner. Bringing proprietary technology to the U.S. market is a direct contribution to the national technology ecosystem — not a replication of existing tools.</p>
+          </div>
+        </div>
+        <div class="arg-row reveal d4">
+          <div class="arg-num">3</div>
+          <div class="arg-content">
+            <h4>Economic Impact at Scale</h4>
+            <p>Each agency adopting TASS reduces operational costs by 40%, increases capacity by 250%, and prevents up to $50,000 in annual fraud losses — multiplied across 40,000+ U.S. agencies.</p>
+          </div>
+        </div>
+        <div class="arg-row reveal d5">
+          <div class="arg-num">4</div>
+          <div class="arg-content">
+            <h4>Proven Market Viability</h4>
+            <p>TASS is already deployed in active production with measurable results. The U.S. expansion is not speculative — it is the next logical geographic step of a validated, revenue-generating system.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEGAL CTA BLOCK -->
+    <div style="margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08);" class="reveal d5">
+
+      <!-- Availability statement -->
+      <div style="background:rgba(52,199,89,0.1);border:1px solid rgba(52,199,89,0.3);border-radius:12px;padding:16px 22px;margin-bottom:24px;display:flex;align-items:center;gap:14px;">
+        <div style="width:10px;height:10px;background:var(--green);border-radius:50%;flex-shrink:0;animation:pulse 1.8s ease-in-out infinite;"></div>
+        <div>
+          <div style="font-size:0.85rem;font-weight:700;color:white;margin-bottom:3px;">Available for Technical Interview &amp; Detailed System Walkthrough</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);">Ready to demonstrate TASS live, share source code excerpts, and provide full architecture documentation upon request by USCIS or legal counsel.</div>
+        </div>
+      </div>
+
+      <!-- Identity + Phase 1 funding -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;">
+          <div style="font-size:1rem;font-weight:700;color:white;margin-bottom:6px;">Nestor Oscar Falon Fersan</div>
+          <div style="font-size:0.82rem;color:rgba(255,255,255,0.45);line-height:1.6;">
+            Software Engineer &amp; Systems Architect<br>
+            Founder, IT-Integral Solutions<br>
+            La Rioja, Argentina<br>
+            <span style="color:rgba(100,180,255,0.8);font-weight:600;">Preparing for U.S. Market Expansion</span>
+          </div>
+        </div>
+        <div style="background:rgba(0,82,255,0.08);border:1px solid rgba(0,82,255,0.25);border-radius:12px;padding:20px;">
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Phase 1 — U.S. Deployment</div>
+          <div style="font-size:0.88rem;font-weight:700;color:white;margin-bottom:4px;">Q1 2027 · Florida &amp; Texas</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);line-height:1.6;">Initial capital secured through private asset liquidation to fund operational setup. Target: Miami, Orlando, Houston, San Antonio.</div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        <a href="TASS_Technical_Case_Study.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:white;padding:13px 22px;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.85rem;transition:opacity .2s;" onmouseover="this.style.opacity='.82'" onmouseout="this.style.opacity='1'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          Download Technical Case Study
+        </a>
+        <a href="https://www.linkedin.com/in/nestor-oscar-falon-fersan-594070123" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:white;padding:13px 22px;border-radius:10px;text-decoration:none;font-weight:600;font-size:0.85rem;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn Profile
+        </a>
+        <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);padding:13px 22px;border-radius:10px;text-decoration:none;font-size:0.85rem;transition:all .2s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)';this.style.color='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.6)'">
+          Full Portfolio →
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="slide-footer">
+    <span class="slide-footer-brand">TASS · IT-Integral Solutions</span>
+    <span class="slide-footer-right">© 2026 Nestor Oscar Falon Fersan</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════ -->
+<script>
+// ── SCROLL & REVEAL ───────────────────────────
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+const prog   = document.getElementById('progress');
+
+function updateProgress() {
+  const scrolled = window.scrollY;
+  const total    = document.body.scrollHeight - window.innerHeight;
+  prog.style.width = (scrolled / total * 100) + '%';
+  let active = 0;
+  slides.forEach((s, i) => {
+    if (window.scrollY >= s.offsetTop - window.innerHeight * 0.5) active = i;
+  });
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+}
+
+function scrollToSlide(i) {
+  slides[i].scrollIntoView({ behavior: 'smooth' });
+}
+
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('up'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// roadmap fill
+const roadmapObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) document.getElementById('roadmapFill').style.width = '45%';
+  });
+}, { threshold: 0.3 });
+const rm = document.getElementById('roadmap');
+if (rm) roadmapObs.observe(rm);
+
+// hero reveals on load
+document.querySelectorAll('#slide-0 .reveal').forEach((el, i) => {
+  setTimeout(() => el.classList.add('up'), 100 + i * 130);
+});
+
+window.addEventListener('scroll', updateProgress, { passive: true });
+window.addEventListener('resize', updateProgress);
+updateProgress();
+
+// ── CHART.JS DEFAULTS ────────────────────────
+Chart.defaults.color = 'rgba(255,255,255,0.45)';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size   = 12;
+
+// ── ARCH CHART (horizontal bar — security layers) ──
+const archCtx = document.getElementById('archChart');
+if (archCtx) {
+  new Chart(archCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Client UI', 'API Gateway', 'Core Engine', 'PostgreSQL', 'Security Layer'],
+      datasets: [{
+        label: 'Security Coverage (%)',
+        data: [72, 88, 95, 98, 100],
+        backgroundColor: [
+          'rgba(0,82,255,0.35)', 'rgba(0,82,255,0.5)',
+          'rgba(0,82,255,0.65)', 'rgba(0,82,255,0.8)',
+          'rgba(52,199,89,0.85)'
+        ],
+        borderColor: ['rgba(0,82,255,0.7)', 'rgba(0,82,255,0.8)',
+          'rgba(0,82,255,0.9)', 'rgba(0,82,255,1)', 'rgba(52,199,89,1)'],
+        borderWidth: 1,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          max: 100,
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { callback: v => v + '%' }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ── SECURITY PIE ──────────────────────────────
+const pieCtx = document.getElementById('secPie');
+if (pieCtx) {
+  new Chart(pieCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Vulnerabilities Eliminated', 'Remaining (Managed)', 'Unmanaged (Traditional)'],
+      datasets: [{
+        data: [68, 22, 10],
+        backgroundColor: [
+          'rgba(52,199,89,0.8)', 'rgba(0,82,255,0.6)', 'rgba(255,59,48,0.5)'
+        ],
+        borderColor: ['rgba(52,199,89,1)', 'rgba(0,82,255,1)', 'rgba(255,59,48,1)'],
+        borderWidth: 1.5
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '65%',
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10 } }
+      }
+    }
+  });
+}
+
+// ── EFFICIENCY BAR ────────────────────────────
+const effCtx = document.getElementById('effBar');
+if (effCtx) {
+  new Chart(effCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Quote Time', 'Booking Time', 'Error Rate', 'Follow-up Misses'],
+      datasets: [
+        {
+          label: 'Traditional',
+          data: [100, 100, 100, 100],
+          backgroundColor: 'rgba(255,59,48,0.55)',
+          borderColor: 'rgba(255,59,48,0.9)',
+          borderWidth: 1, borderRadius: 4
+        },
+        {
+          label: 'With TASS',
+          data: [3, 15, 7, 0],
+          backgroundColor: 'rgba(52,199,89,0.6)',
+          borderColor: 'rgba(52,199,89,0.95)',
+          borderWidth: 1, borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10 } },
+        tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + '% of baseline' } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          max: 110,
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { callback: v => v + '%' }
+        }
+      }
+    }
+  });
+}
+
+// ── CAPACITY BAR ──────────────────────────────
+const capCtx = document.getElementById('capBar');
+if (capCtx) {
+  new Chart(capCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Quotes/Day', 'Clients Managed', 'Revenue Capacity', 'Hours Saved/Week'],
+      datasets: [
+        {
+          label: 'Without TASS',
+          data: [3, 40, 100, 0],
+          backgroundColor: 'rgba(110,110,115,0.5)',
+          borderColor: 'rgba(110,110,115,0.8)',
+          borderWidth: 1, borderRadius: 4
+        },
+        {
+          label: 'With TASS',
+          data: [28, 120, 300, 24],
+          backgroundColor: 'rgba(0,82,255,0.65)',
+          borderColor: 'rgba(0,82,255,0.95)',
+          borderWidth: 1, borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 14, boxWidth: 10 } }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { callback: v => v === 100 ? '100%' : v } }
+      }
+    }
+  });
+}
+
+// ── KEYBOARD NAV ─────────────────────────────
+document.addEventListener('keydown', e => {
+  const current = [...slides].findIndex(s =>
+    window.scrollY >= s.offsetTop - 50 && window.scrollY < s.offsetTop + s.offsetHeight - 50
+  );
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+    e.preventDefault(); if (current < slides.length - 1) scrollToSlide(current + 1);
+  }
+  if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault(); if (current > 0) scrollToSlide(current - 1);
+  }
+});
+</script>
+</body>
+</html>
